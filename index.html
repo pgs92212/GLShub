@@ -548,8 +548,9 @@
                 
                 <!-- Avatar -->
                 <div class="relative -mt-12 flex justify-center">
-                    <div id="profile-avatar" class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 flex items-center justify-center text-3xl text-white font-bold shadow-xl border-4 border-white">
-                        U
+                    <div id="profile-avatar" class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 flex items-center justify-center text-3xl text-white font-bold shadow-xl border-4 border-white overflow-hidden">
+                        <span id="profile-avatar-letter">U</span>
+                        <img id="profile-avatar-img" class="w-full h-full object-cover hidden" src="" alt="Avatar">
                     </div>
                 </div>
                 
@@ -596,6 +597,11 @@
                             <label class="block text-sm font-medium text-gray-600 mb-1">URL do Banner (GIF ou imagem)</label>
                             <input type="url" id="profile-edit-banner" placeholder="https://..." class="input-aero w-full py-2.5 px-4">
                             <p class="text-xs text-gray-400 mt-1">🎨 Você pode usar GIFs animados para um banner animado!</p>
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">URL da Foto de Perfil</label>
+                            <input type="url" id="profile-edit-avatar" placeholder="https://..." class="input-aero w-full py-2.5 px-4">
+                            <p class="text-xs text-gray-400 mt-1">📷 Adicione uma foto ou GIF para seu avatar!</p>
                         </div>
                         <div class="flex gap-3 pt-2">
                             <button type="button" onclick="app.toggleProfileEdit(false)" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
@@ -688,16 +694,18 @@
                     if (user) {
                         this.state.currentUser = {
                             username: user.displayName || user.email.split('@')[0],
-                            email: user.email,
+                            email: user.email.toLowerCase(),
                             uid: user.uid
                         };
                         this.renderNav();
                         this.renderHeroCTA();
-                        console.log("User logged in:", this.state.currentUser.username);
+                        this.renderGames(); // Re-render games to show admin buttons
+                        console.log("User logged in:", this.state.currentUser.username, "| Admin:", this.isAdmin());
                     } else {
                         this.state.currentUser = null;
                         this.renderNav();
                         this.renderHeroCTA();
+                        this.renderGames(); // Re-render games to hide admin buttons
                         console.log("User logged out");
                     }
                 });
@@ -797,7 +805,8 @@
 
             // --- ADMIN ---
             isAdmin() {
-                return this.state.currentUser && this.state.currentUser.email === 'admin12ofcl@gmail.com';
+                if (!this.state.currentUser || !this.state.currentUser.email) return false;
+                return this.state.currentUser.email.toLowerCase() === 'admin12ofcl@gmail.com';
             },
 
             // --- GAMES CRUD ---
@@ -1244,7 +1253,8 @@
                         displayName: 'Usuário',
                         bio: '',
                         url: '',
-                        banner: ''
+                        banner: '',
+                        avatar: ''
                     };
                     
                     if (profileSnap.exists()) {
@@ -1263,7 +1273,19 @@
                     document.getElementById('profile-display-url').textContent = profile.url ? `glshub.com/${profile.url}` : '';
                     document.getElementById('profile-display-url').style.display = profile.url ? 'block' : 'none';
                     document.getElementById('profile-games-count').textContent = userGames.length;
-                    document.getElementById('profile-avatar').textContent = (profile.displayName || 'U').charAt(0).toUpperCase();
+                    
+                    // Avatar
+                    const avatarLetter = document.getElementById('profile-avatar-letter');
+                    const avatarImg = document.getElementById('profile-avatar-img');
+                    if (profile.avatar) {
+                        avatarLetter.classList.add('hidden');
+                        avatarImg.classList.remove('hidden');
+                        avatarImg.src = profile.avatar;
+                    } else {
+                        avatarLetter.classList.remove('hidden');
+                        avatarImg.classList.add('hidden');
+                        avatarLetter.textContent = (profile.displayName || 'U').charAt(0).toUpperCase();
+                    }
                     
                     // Banner
                     const bannerPreview = document.getElementById('profile-banner-preview');
@@ -1282,6 +1304,7 @@
                         document.getElementById('profile-edit-bio').value = profile.bio || '';
                         document.getElementById('profile-edit-url').value = profile.url || '';
                         document.getElementById('profile-edit-banner').value = profile.banner || '';
+                        document.getElementById('profile-edit-avatar').value = profile.avatar || '';
                     } else {
                         editBtn.classList.add('hidden');
                     }
@@ -1322,6 +1345,7 @@
                 const bio = document.getElementById('profile-edit-bio').value.trim();
                 const url = document.getElementById('profile-edit-url').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
                 const banner = document.getElementById('profile-edit-banner').value.trim();
+                const avatar = document.getElementById('profile-edit-avatar').value.trim();
                 
                 if (!displayName) {
                     alert('Por favor, insira um nome de exibição.');
@@ -1335,6 +1359,7 @@
                         bio,
                         url,
                         banner,
+                        avatar,
                         updatedAt: Date.now()
                     }, { merge: true });
                     
