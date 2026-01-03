@@ -533,6 +533,84 @@
         </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-sky-900/30 backdrop-blur-sm transition-opacity" onclick="app.closeModal('profile-modal')"></div>
+            <div class="modal-aero inline-block align-middle max-w-2xl w-full p-0 relative z-10 transform transition-all overflow-hidden">
+                <!-- Banner -->
+                <div id="profile-banner" class="h-32 bg-gradient-to-r from-sky-400 via-teal-400 to-green-400 relative">
+                    <div class="absolute inset-0 bg-cover bg-center" id="profile-banner-preview"></div>
+                    <button onclick="app.closeModal('profile-modal')" class="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-600 w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Avatar -->
+                <div class="relative -mt-12 flex justify-center">
+                    <div id="profile-avatar" class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 flex items-center justify-center text-3xl text-white font-bold shadow-xl border-4 border-white">
+                        U
+                    </div>
+                </div>
+                
+                <!-- Profile Info Display -->
+                <div id="profile-display" class="p-6">
+                    <h3 id="profile-display-name" class="text-2xl font-bold text-gray-700 text-center mb-1">Nome do Usuário</h3>
+                    <p id="profile-display-url" class="text-sky-500 text-sm text-center mb-3"></p>
+                    <p id="profile-display-bio" class="text-gray-500 text-center mb-4 max-w-md mx-auto"></p>
+                    
+                    <div id="profile-stats" class="flex justify-center gap-8 mb-6">
+                        <div class="text-center">
+                            <div id="profile-games-count" class="text-2xl font-bold text-sky-600">0</div>
+                            <div class="text-xs text-gray-400">Jogos</div>
+                        </div>
+                    </div>
+                    
+                    <button id="profile-edit-btn" onclick="app.toggleProfileEdit(true)" class="glossy-btn text-white px-6 py-2 rounded-lg font-medium hidden">
+                        <i class="fa-solid fa-pen mr-2"></i>Editar Perfil
+                    </button>
+                </div>
+                
+                <!-- Profile Edit Form (hidden by default) -->
+                <div id="profile-edit" class="p-6 hidden">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
+                        <i class="fa-solid fa-user-edit mr-2"></i>Editar Perfil
+                    </h3>
+                    <form onsubmit="app.handleSaveProfile(event)" class="space-y-4">
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Nome de Exibição</label>
+                            <input type="text" id="profile-edit-name" required placeholder="Seu nome..." class="input-aero w-full py-2.5 px-4">
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Bio</label>
+                            <textarea id="profile-edit-bio" rows="3" placeholder="Conte um pouco sobre você..." class="input-aero w-full py-2.5 px-4 resize-none"></textarea>
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">URL Personalizada</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">glshub.com/</span>
+                                <input type="text" id="profile-edit-url" placeholder="seu-nome" class="input-aero flex-1 py-2.5 px-4 rounded-l-none">
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">URL do Banner (GIF ou imagem)</label>
+                            <input type="url" id="profile-edit-banner" placeholder="https://..." class="input-aero w-full py-2.5 px-4">
+                            <p class="text-xs text-gray-400 mt-1">🎨 Você pode usar GIFs animados para um banner animado!</p>
+                        </div>
+                        <div class="flex gap-3 pt-2">
+                            <button type="button" onclick="app.toggleProfileEdit(false)" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="flex-1 glossy-btn-green py-3 px-4 rounded-lg text-white font-semibold">
+                                <i class="fa-solid fa-save mr-2"></i>Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Play Game Modal -->
     <div id="play-modal" class="fixed inset-0 z-[70] hidden overflow-hidden" role="dialog" aria-modal="true">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-100/95 to-white/95 backdrop-blur-md flex flex-col">
@@ -557,7 +635,7 @@
                 <div id="loading-spinner" class="absolute text-sky-400 text-5xl animate-spin">
                     <i class="fa-solid fa-circle-notch"></i>
                 </div>
-                <iframe id="game-iframe" class="w-full h-full border-0 rounded-2xl" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                <iframe id="game-iframe" class="w-full h-full border-0 rounded-2xl" allowfullscreen></iframe>
             </div>
         </div>
     </div>
@@ -566,7 +644,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // FIREBASE CONFIGURATION
         const firebaseConfig = {
@@ -717,6 +795,11 @@
                 }
             },
 
+            // --- ADMIN ---
+            isAdmin() {
+                return this.state.currentUser && this.state.currentUser.email === 'admin12ofcl@gmail.com';
+            },
+
             // --- GAMES CRUD ---
 
             toggleSubmitType(type) {
@@ -862,8 +945,8 @@
                 const game = this.state.games.find(g => g.id === id);
                 if (!game) return;
                 
-                // Check ownership
-                if (!this.state.currentUser || game.uid !== this.state.currentUser.uid) {
+                // Check ownership OR admin
+                if (!this.state.currentUser || (game.uid !== this.state.currentUser.uid && !this.isAdmin())) {
                     alert('Você não tem permissão para editar este jogo.');
                     return;
                 }
@@ -895,7 +978,8 @@
                 const gameId = document.getElementById('edit-game-id').value;
                 const game = this.state.games.find(g => g.id === gameId);
                 
-                if (!game || game.uid !== this.state.currentUser.uid) {
+                // Check ownership OR admin
+                if (!game || (game.uid !== this.state.currentUser.uid && !this.isAdmin())) {
                     alert('Você não tem permissão para editar este jogo.');
                     return;
                 }
@@ -934,7 +1018,8 @@
                 const game = this.state.games.find(g => g.id === id);
                 if (!game) return;
                 
-                if (!this.state.currentUser || game.uid !== this.state.currentUser.uid) {
+                // Check ownership OR admin
+                if (!this.state.currentUser || (game.uid !== this.state.currentUser.uid && !this.isAdmin())) {
                     alert('Você não tem permissão para excluir este jogo.');
                     return;
                 }
@@ -968,13 +1053,14 @@
                 if (this.state.currentUser) {
                     const userHtml = `
                         <a href="#" onclick="app.openModal('submit-modal')" class="glossy-btn text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fa-solid fa-plus mr-1"></i> Publicar</a>
-                        <span class="text-sky-600 px-4 py-2 text-sm font-medium border border-sky-300 rounded-full bg-sky-50">👤 ${this.state.currentUser.username}</span>
+                        <a href="#" onclick="app.openProfile('${this.state.currentUser.uid}')" class="text-sky-600 px-4 py-2 text-sm font-medium border border-sky-300 rounded-full bg-sky-50 hover:bg-sky-100 transition-colors">👤 ${this.state.currentUser.username}</a>
                         <a href="#" onclick="app.logout()" class="text-red-400 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium"><i class="fa-solid fa-sign-out-alt"></i></a>
                     `;
                     
                     const mobileUserHtml = `
                         <a href="#" onclick="app.openModal('submit-modal')" class="text-sky-600 hover:bg-sky-50 block px-3 py-2 rounded-md text-base font-medium">📤 Publicar Jogo</a>
-                        <a href="#" onclick="app.logout()" class="text-red-400 hover:bg-red-50 block px-3 py-2 rounded-md text-base font-medium">🚪 Sair (${this.state.currentUser.username})</a>
+                        <a href="#" onclick="app.openProfile('${this.state.currentUser.uid}')" class="text-purple-600 hover:bg-purple-50 block px-3 py-2 rounded-md text-base font-medium">👤 Meu Perfil</a>
+                        <a href="#" onclick="app.logout()" class="text-red-400 hover:bg-red-50 block px-3 py-2 rounded-md text-base font-medium">🚪 Sair</a>
                     `;
 
                     html = userHtml;
@@ -1039,8 +1125,8 @@
                     const card = document.createElement('div');
                     card.className = "game-card glass-card overflow-hidden flex flex-col h-full";
                     
-                    // Check if current user is the owner
-                    const isOwner = this.state.currentUser && game.uid === this.state.currentUser.uid;
+                    // Check if current user is the owner OR admin
+                    const isOwner = this.state.currentUser && (game.uid === this.state.currentUser.uid || this.isAdmin());
                     
                     // Edit/Delete buttons (only for owner)
                     const ownerButtons = isOwner ? `
@@ -1071,11 +1157,11 @@
                             </div>
                             <p class="text-gray-500 text-sm mb-4 line-clamp-2 flex-grow">${game.desc}</p>
                             <div class="flex items-center justify-between mt-auto pt-4 border-t border-sky-100">
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="event.stopPropagation(); app.openProfile('${game.uid}')">
                                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 flex items-center justify-center text-xs text-white font-bold shadow-md">
                                         ${game.author ? game.author.charAt(0).toUpperCase() : 'A'}
                                     </div>
-                                    <span class="text-xs text-gray-500 truncate max-w-[80px]">${game.author || 'Anon'}</span>
+                                    <span class="text-xs text-gray-500 truncate max-w-[80px] hover:text-sky-600">${game.author || 'Anon'}</span>
                                 </div>
                                 <button onclick="app.playGame('${game.id}')" class="glossy-btn text-white text-sm font-medium px-4 py-1.5 rounded-full">
                                     JOGAR <i class="fa-solid fa-arrow-right ml-1"></i>
@@ -1142,6 +1228,137 @@
                 if(search) search.value = '';
                 this.renderGames();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            // --- PROFILE SYSTEM ---
+
+            async openProfile(uid) {
+                if (!uid) return;
+                
+                try {
+                    // Load profile from Firestore
+                    const profileRef = doc(db, "profiles", uid);
+                    const profileSnap = await getDoc(profileRef);
+                    
+                    let profile = {
+                        displayName: 'Usuário',
+                        bio: '',
+                        url: '',
+                        banner: ''
+                    };
+                    
+                    if (profileSnap.exists()) {
+                        profile = { ...profile, ...profileSnap.data() };
+                    }
+                    
+                    // Check if viewing own profile
+                    const isOwnProfile = this.state.currentUser && this.state.currentUser.uid === uid;
+                    
+                    // Get user's games count
+                    const userGames = this.state.games.filter(g => g.uid === uid);
+                    
+                    // Update display
+                    document.getElementById('profile-display-name').textContent = profile.displayName || 'Usuário';
+                    document.getElementById('profile-display-bio').textContent = profile.bio || 'Nenhuma bio definida.';
+                    document.getElementById('profile-display-url').textContent = profile.url ? `glshub.com/${profile.url}` : '';
+                    document.getElementById('profile-display-url').style.display = profile.url ? 'block' : 'none';
+                    document.getElementById('profile-games-count').textContent = userGames.length;
+                    document.getElementById('profile-avatar').textContent = (profile.displayName || 'U').charAt(0).toUpperCase();
+                    
+                    // Banner
+                    const bannerPreview = document.getElementById('profile-banner-preview');
+                    if (profile.banner) {
+                        bannerPreview.style.backgroundImage = `url(${profile.banner})`;
+                    } else {
+                        bannerPreview.style.backgroundImage = '';
+                    }
+                    
+                    // Show edit button only for own profile
+                    const editBtn = document.getElementById('profile-edit-btn');
+                    if (isOwnProfile) {
+                        editBtn.classList.remove('hidden');
+                        // Pre-fill edit form
+                        document.getElementById('profile-edit-name').value = profile.displayName || '';
+                        document.getElementById('profile-edit-bio').value = profile.bio || '';
+                        document.getElementById('profile-edit-url').value = profile.url || '';
+                        document.getElementById('profile-edit-banner').value = profile.banner || '';
+                    } else {
+                        editBtn.classList.add('hidden');
+                    }
+                    
+                    // Store current profile uid for saving
+                    this.state.viewingProfileUid = uid;
+                    
+                    // Reset to display mode
+                    this.toggleProfileEdit(false);
+                    
+                    this.openModal('profile-modal');
+                    
+                } catch (error) {
+                    console.error("Error loading profile:", error);
+                    alert("Erro ao carregar perfil.");
+                }
+            },
+
+            toggleProfileEdit(showEdit) {
+                const displaySection = document.getElementById('profile-display');
+                const editSection = document.getElementById('profile-edit');
+                
+                if (showEdit) {
+                    displaySection.classList.add('hidden');
+                    editSection.classList.remove('hidden');
+                } else {
+                    displaySection.classList.remove('hidden');
+                    editSection.classList.add('hidden');
+                }
+            },
+
+            async handleSaveProfile(e) {
+                e.preventDefault();
+                
+                if (!this.state.currentUser) return;
+                
+                const displayName = document.getElementById('profile-edit-name').value.trim();
+                const bio = document.getElementById('profile-edit-bio').value.trim();
+                const url = document.getElementById('profile-edit-url').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+                const banner = document.getElementById('profile-edit-banner').value.trim();
+                
+                if (!displayName) {
+                    alert('Por favor, insira um nome de exibição.');
+                    return;
+                }
+                
+                try {
+                    const profileRef = doc(db, "profiles", this.state.currentUser.uid);
+                    await setDoc(profileRef, {
+                        displayName,
+                        bio,
+                        url,
+                        banner,
+                        updatedAt: Date.now()
+                    }, { merge: true });
+                    
+                    // Update auth profile display name
+                    await updateProfile(auth.currentUser, {
+                        displayName: displayName
+                    });
+                    
+                    // Update local state
+                    this.state.currentUser.username = displayName;
+                    
+                    // Re-render nav
+                    this.renderNav();
+                    
+                    // Refresh profile display
+                    await this.openProfile(this.state.currentUser.uid);
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                    this.showToast('✅ Perfil atualizado com sucesso!', 'green');
+                    
+                } catch (error) {
+                    console.error("Error saving profile:", error);
+                    alert("Erro ao salvar perfil.");
+                }
             }
         };
 
