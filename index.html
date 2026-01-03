@@ -468,6 +468,71 @@
         </div>
     </div>
 
+    <!-- Edit Game Modal -->
+    <div id="edit-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-sky-900/30 backdrop-blur-sm transition-opacity" onclick="app.closeModal('edit-modal')"></div>
+            <div class="modal-aero inline-block align-middle max-w-lg w-full p-6 relative z-10 transform transition-all">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                        <i class="fa-solid fa-pen-to-square mr-2"></i>Editar Jogo
+                    </h3>
+                    <button onclick="app.closeModal('edit-modal')" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <form onsubmit="app.handleEditGame(event)" class="space-y-4">
+                    <input type="hidden" id="edit-game-id">
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Título do Jogo</label>
+                        <input type="text" id="edit-game-title" required placeholder="Ex: Super Mario Clone" class="input-aero w-full py-2.5 px-4">
+                    </div>
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Descrição Curta</label>
+                        <textarea id="edit-game-desc" rows="2" required placeholder="Descreva seu jogo..." class="input-aero w-full py-2.5 px-4 resize-none"></textarea>
+                    </div>
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">URL da Imagem (Thumbnail)</label>
+                        <input type="url" id="edit-game-thumb" placeholder="https://..." class="input-aero w-full py-2.5 px-4">
+                        <p class="text-xs text-gray-400 mt-1">🖼️ Deixe em branco para usar imagem padrão.</p>
+                    </div>
+                    <!-- Game Type Selection -->
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Tipo de Publicação</label>
+                        <div class="flex gap-2 mb-3">
+                            <button type="button" onclick="app.toggleEditType('url')" id="edit-btn-type-url" class="flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner">
+                                <i class="fa-solid fa-link mr-1"></i> Link (URL)
+                            </button>
+                            <button type="button" onclick="app.toggleEditType('html')" id="edit-btn-type-html" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50">
+                                <i class="fa-solid fa-code mr-1"></i> Código HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input URL -->
+                    <div id="edit-input-container-url" class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">URL do Jogo</label>
+                        <input type="url" id="edit-game-url" placeholder="https://exemplo.com/jogo" class="input-aero w-full py-2.5 px-4">
+                        <p class="text-xs text-amber-500 mt-1"><i class="fa-solid fa-triangle-exclamation"></i> Certifique-se que o link permite embed (iframe).</p>
+                    </div>
+
+                    <!-- Input HTML -->
+                    <div id="edit-input-container-html" class="text-left hidden">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Cole o Código HTML</label>
+                        <textarea id="edit-game-html" rows="6" placeholder="<!DOCTYPE html><html>...</html>" class="input-aero w-full py-2.5 px-4 font-mono text-xs"></textarea>
+                        <p class="text-xs text-gray-400 mt-1">📝 Cole o código completo do seu jogo aqui (HTML/JS/CSS).</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="app.closeModal('edit-modal')" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="flex-1 glossy-btn-green py-3 px-4 rounded-lg text-white font-semibold">
+                            <i class="fa-solid fa-save mr-2"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Play Game Modal -->
     <div id="play-modal" class="fixed inset-0 z-[70] hidden overflow-hidden" role="dialog" aria-modal="true">
         <div class="absolute inset-0 bg-gradient-to-b from-sky-100/95 to-white/95 backdrop-blur-md flex flex-col">
@@ -501,7 +566,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // FIREBASE CONFIGURATION
         const firebaseConfig = {
@@ -766,6 +831,131 @@
                 this.openModal('play-modal');
             },
 
+            // --- EDIT GAME ---
+
+            toggleEditType(type) {
+                const btnUrl = document.getElementById('edit-btn-type-url');
+                const btnHtml = document.getElementById('edit-btn-type-html');
+                const containerUrl = document.getElementById('edit-input-container-url');
+                const containerHtml = document.getElementById('edit-input-container-html');
+                const inputUrl = document.getElementById('edit-game-url');
+                const inputHtml = document.getElementById('edit-game-html');
+
+                if (type === 'url') {
+                    btnUrl.className = "flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner";
+                    btnHtml.className = "flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                    containerUrl.classList.remove('hidden');
+                    containerHtml.classList.add('hidden');
+                    inputUrl.setAttribute('required', '');
+                    inputHtml.removeAttribute('required');
+                } else {
+                    btnHtml.className = "flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner";
+                    btnUrl.className = "flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                    containerHtml.classList.remove('hidden');
+                    containerUrl.classList.add('hidden');
+                    inputHtml.setAttribute('required', '');
+                    inputUrl.removeAttribute('required');
+                }
+            },
+
+            openEditModal(id) {
+                const game = this.state.games.find(g => g.id === id);
+                if (!game) return;
+                
+                // Check ownership
+                if (!this.state.currentUser || game.uid !== this.state.currentUser.uid) {
+                    alert('Você não tem permissão para editar este jogo.');
+                    return;
+                }
+
+                // Fill form with game data
+                document.getElementById('edit-game-id').value = game.id;
+                document.getElementById('edit-game-title').value = game.title;
+                document.getElementById('edit-game-desc').value = game.desc;
+                document.getElementById('edit-game-thumb').value = game.thumb || '';
+
+                // Set correct type
+                if (game.type === 'html') {
+                    this.toggleEditType('html');
+                    document.getElementById('edit-game-html').value = game.content || '';
+                    document.getElementById('edit-game-url').value = '';
+                } else {
+                    this.toggleEditType('url');
+                    document.getElementById('edit-game-url').value = game.content || '';
+                    document.getElementById('edit-game-html').value = '';
+                }
+
+                this.openModal('edit-modal');
+            },
+
+            async handleEditGame(e) {
+                e.preventDefault();
+                if (!auth.currentUser) return;
+
+                const gameId = document.getElementById('edit-game-id').value;
+                const game = this.state.games.find(g => g.id === gameId);
+                
+                if (!game || game.uid !== this.state.currentUser.uid) {
+                    alert('Você não tem permissão para editar este jogo.');
+                    return;
+                }
+
+                const title = document.getElementById('edit-game-title').value;
+                const desc = document.getElementById('edit-game-desc').value;
+                const thumb = document.getElementById('edit-game-thumb').value || 'https://placehold.co/600x400/87CEEB/FFF?text=🎮+GAME';
+                
+                const isUrlMode = !document.getElementById('edit-input-container-url').classList.contains('hidden');
+                
+                const updatedData = {
+                    title,
+                    desc,
+                    thumb,
+                    type: isUrlMode ? 'url' : 'html',
+                    content: isUrlMode ? document.getElementById('edit-game-url').value : document.getElementById('edit-game-html').value,
+                    updatedAt: Date.now()
+                };
+
+                try {
+                    const gameRef = doc(db, "games", gameId);
+                    await updateDoc(gameRef, updatedData);
+                    
+                    this.closeModal('edit-modal');
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                    this.showToast('✏️ Jogo atualizado com sucesso!', 'green');
+
+                } catch (error) {
+                    console.error("Error updating document: ", error);
+                    alert("Erro ao atualizar jogo.");
+                }
+            },
+
+            async deleteGame(id) {
+                const game = this.state.games.find(g => g.id === id);
+                if (!game) return;
+                
+                if (!this.state.currentUser || game.uid !== this.state.currentUser.uid) {
+                    alert('Você não tem permissão para excluir este jogo.');
+                    return;
+                }
+
+                if (!confirm(`Tem certeza que deseja excluir "${game.title}"? Esta ação não pode ser desfeita.`)) {
+                    return;
+                }
+
+                try {
+                    const gameRef = doc(db, "games", id);
+                    await deleteDoc(gameRef);
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playClose();
+                    this.showToast('🗑️ Jogo excluído.', 'gray');
+
+                } catch (error) {
+                    console.error("Error deleting document: ", error);
+                    alert("Erro ao excluir jogo.");
+                }
+            },
+
             // --- UI RENDERING ---
 
             renderNav() {
@@ -848,9 +1038,25 @@
                 list.forEach(game => {
                     const card = document.createElement('div');
                     card.className = "game-card glass-card overflow-hidden flex flex-col h-full";
-                    // Note: id passed as string needs quotes
+                    
+                    // Check if current user is the owner
+                    const isOwner = this.state.currentUser && game.uid === this.state.currentUser.uid;
+                    
+                    // Edit/Delete buttons (only for owner)
+                    const ownerButtons = isOwner ? `
+                        <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <button onclick="event.stopPropagation(); app.openEditModal('${game.id}')" class="bg-white/90 hover:bg-amber-100 text-amber-600 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="Editar">
+                                <i class="fa-solid fa-pen text-sm"></i>
+                            </button>
+                            <button onclick="event.stopPropagation(); app.deleteGame('${game.id}')" class="bg-white/90 hover:bg-red-100 text-red-500 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="Excluir">
+                                <i class="fa-solid fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    ` : '';
+                    
                     card.innerHTML = `
                         <div class="h-48 overflow-hidden relative group cursor-pointer" onclick="app.playGame('${game.id}')">
+                            ${ownerButtons}
                             <img src="${game.thumb}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/87CEEB/FFF?text=🎮'">
                             <div class="play-overlay absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
                                 <div class="glossy-btn p-4 rounded-full">
