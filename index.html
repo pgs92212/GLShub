@@ -460,6 +460,20 @@
                         <textarea id="game-html" rows="6" placeholder="<!DOCTYPE html><html>...</html>" class="input-aero w-full py-2.5 px-4 font-mono text-xs"></textarea>
                         <p class="text-xs text-gray-400 mt-1">📝 Cole o código completo do seu jogo aqui (HTML/JS/CSS).</p>
                     </div>
+                    <!-- Privacy Toggle -->
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Visibilidade</label>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="app.togglePrivacy('public', 'submit')" id="btn-privacy-public" class="flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-green-100 border-green-300 text-green-700 shadow-inner">
+                                <i class="fa-solid fa-globe mr-1"></i> Público
+                            </button>
+                            <button type="button" onclick="app.togglePrivacy('private', 'submit')" id="btn-privacy-private" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50">
+                                <i class="fa-solid fa-lock mr-1"></i> Privado
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">🔒 Jogos privados só aparecem para você.</p>
+                    </div>
+
                     <button type="submit" class="glossy-btn w-full py-3 px-4 rounded-lg text-white font-semibold">
                         <i class="fa-solid fa-rocket mr-2"></i>Publicar Jogo
                     </button>
@@ -520,6 +534,21 @@
                         <textarea id="edit-game-html" rows="6" placeholder="<!DOCTYPE html><html>...</html>" class="input-aero w-full py-2.5 px-4 font-mono text-xs"></textarea>
                         <p class="text-xs text-gray-400 mt-1">📝 Cole o código completo do seu jogo aqui (HTML/JS/CSS).</p>
                     </div>
+
+                    <!-- Privacy Toggle -->
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Visibilidade</label>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="app.togglePrivacy('public', 'edit')" id="edit-btn-privacy-public" class="flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-green-100 border-green-300 text-green-700 shadow-inner">
+                                <i class="fa-solid fa-globe mr-1"></i> Público
+                            </button>
+                            <button type="button" onclick="app.togglePrivacy('private', 'edit')" id="edit-btn-privacy-private" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50">
+                                <i class="fa-solid fa-lock mr-1"></i> Privado
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">🔒 Jogos privados só aparecem para você e admins.</p>
+                    </div>
+
                     <div class="flex gap-3">
                         <button type="button" onclick="app.closeModal('edit-modal')" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
                             Cancelar
@@ -846,6 +875,30 @@
                 }
             },
 
+            // Privacy state
+            submitPrivacy: 'public',
+            editPrivacy: 'public',
+
+            togglePrivacy(privacy, modal) {
+                const prefix = modal === 'edit' ? 'edit-' : '';
+                const btnPublic = document.getElementById(`${prefix}btn-privacy-public`);
+                const btnPrivate = document.getElementById(`${prefix}btn-privacy-private`);
+
+                if (privacy === 'public') {
+                    btnPublic.className = "flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-green-100 border-green-300 text-green-700 shadow-inner";
+                    btnPrivate.className = "flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                } else {
+                    btnPrivate.className = "flex-1 py-2 px-3 rounded-lg text-sm font-bold border transition-all bg-red-100 border-red-300 text-red-700 shadow-inner";
+                    btnPublic.className = "flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                }
+
+                if (modal === 'edit') {
+                    this.editPrivacy = privacy;
+                } else {
+                    this.submitPrivacy = privacy;
+                }
+            },
+
             async handleSubmitGame(e) {
                 e.preventDefault();
                 if (!auth.currentUser) return;
@@ -865,7 +918,8 @@
                     uid: this.state.currentUser.uid,
                     timestamp: Date.now(),
                     type: isUrlMode ? 'url' : 'html',
-                    content: isUrlMode ? document.getElementById('game-url').value : document.getElementById('game-html').value
+                    content: isUrlMode ? document.getElementById('game-url').value : document.getElementById('game-html').value,
+                    isPrivate: this.submitPrivacy === 'private'
                 };
 
                 try {
@@ -874,6 +928,7 @@
                     this.closeModal('submit-modal');
                     e.target.reset();
                     this.toggleSubmitType('url');
+                    this.togglePrivacy('public', 'submit');
                     
                     if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
                     this.showToast('🚀 Jogo publicado no Firebase!', 'green');
@@ -977,6 +1032,9 @@
                     document.getElementById('edit-game-html').value = '';
                 }
 
+                // Set privacy
+                this.togglePrivacy(game.isPrivate ? 'private' : 'public', 'edit');
+
                 this.openModal('edit-modal');
             },
 
@@ -1005,6 +1063,7 @@
                     thumb,
                     type: isUrlMode ? 'url' : 'html',
                     content: isUrlMode ? document.getElementById('edit-game-url').value : document.getElementById('edit-game-html').value,
+                    isPrivate: this.editPrivacy === 'private',
                     updatedAt: Date.now()
                 };
 
@@ -1118,9 +1177,17 @@
             renderGames(gamesList = null) {
                 const grid = document.getElementById('game-grid');
                 const empty = document.getElementById('empty-state');
-                const list = gamesList || this.state.games;
+                let list = gamesList || this.state.games;
 
                 if(!grid || !empty) return;
+
+                // Filter private games - only show to owner or admin
+                list = list.filter(game => {
+                    if (!game.isPrivate) return true; // Public games always show
+                    if (!this.state.currentUser) return false; // Not logged in, hide private
+                    if (this.isAdmin()) return true; // Admin sees all
+                    return game.uid === this.state.currentUser.uid; // Owner sees their own
+                });
 
                 grid.innerHTML = '';
 
@@ -1137,6 +1204,13 @@
                     // Check if current user is the owner OR admin
                     const isOwner = this.state.currentUser && (game.uid === this.state.currentUser.uid || this.isAdmin());
                     
+                    // Private badge
+                    const privateBadge = game.isPrivate ? `
+                        <span class="absolute top-2 left-2 bg-red-500/90 text-white text-xs px-2 py-1 rounded-full z-10 flex items-center gap-1 shadow-lg">
+                            <i class="fa-solid fa-lock text-[10px]"></i> Privado
+                        </span>
+                    ` : '';
+                    
                     // Edit/Delete buttons (only for owner)
                     const ownerButtons = isOwner ? `
                         <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -1151,6 +1225,7 @@
                     
                     card.innerHTML = `
                         <div class="h-48 overflow-hidden relative group cursor-pointer" onclick="app.playGame('${game.id}')">
+                            ${privateBadge}
                             ${ownerButtons}
                             <img src="${game.thumb}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/87CEEB/FFF?text=🎮'">
                             <div class="play-overlay absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
