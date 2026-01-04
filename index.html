@@ -462,6 +462,620 @@
         body.mobile-mode #hero-section .absolute.top-0 {
             display: block !important;
         }
+
+        /* ============================================= */
+        /* ========== WINDOWS 98 THEME ================ */
+        /* ============================================= */
+        
+        body.win98-theme {
+            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+            background: #008080 !important; /* Classic Teal */
+        }
+
+        body.win98-theme::before {
+            display: none !important;
+        }
+
+        /* Win98 Cursors - OG Windows 95/98 look (pixelated) */
+        body.win98-theme * {
+            /* Fallback chain prevents “invisible cursor” if a URL fails */
+            cursor: 
+                url('https://cur.cursors-4u.net/cursors/cur-11/cur1054.cur'), auto !important;
+        }
+        
+        body.win98-theme a,
+        body.win98-theme button,
+        body.win98-theme [onclick],
+        body.win98-theme .clickable {
+            cursor:
+                url('https://cur.cursors-4u.net/cursors/cur-11/cur1055.cur'), pointer !important;
+        }
+        
+        /* Win98 Loading/Wait cursor */
+        body.win98-theme .loading,
+        body.win98-theme [aria-busy="true"] {
+            cursor: url('https://cur.cursors-4u.net/cursors/cur-11/cur1058.cur'), wait !important;
+        }
+        
+        /* Win98 Text cursor for inputs */
+        body.win98-theme input,
+        body.win98-theme textarea {
+            cursor: text !important;
+        }
+
+        /* Hide Aero decorations */
+        body.win98-theme .bubble,
+        body.win98-theme .aurora,
+        body.win98-theme .leaf-decoration {
+            display: none !important;
+        }
+
+        /* Win98 Window Style */
+        body.win98-theme .glass-card,
+        body.win98-theme .glass-card-dark,
+        body.win98-theme .modal-aero {
+            background: #c0c0c0 !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf !important;
+        }
+
+        /* Win98 Navbar */
+        body.win98-theme .navbar-aero {
+            background: #c0c0c0 !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            border-bottom: 2px solid #808080 !important;
+            box-shadow: 
+                inset 0 -1px 0 #0a0a0a,
+                inset 0 1px 0 #ffffff !important;
+        }
+
+        /* Win98 Title Bar Style for Hero */
+        body.win98-theme #hero-section {
+            background: #c0c0c0 !important;
+            position: relative;
+            padding-top: 30px !important;
+        }
+
+        body.win98-theme #hero-section::before {
+            content: '📁 GLSHub - Plataforma de Jogos';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 24px;
+            background: linear-gradient(90deg, #000080, #1084d0) !important;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        body.win98-theme #hero-section .absolute.top-0 {
+            display: none !important;
+        }
+
+        /* Win98 Buttons */
+        body.win98-theme .glossy-btn,
+        body.win98-theme .glossy-btn-green {
+            background: #c0c0c0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            color: #000000 !important;
+            text-shadow: none !important;
+            font-weight: normal !important;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf !important;
+        }
+
+        body.win98-theme .glossy-btn:hover,
+        body.win98-theme .glossy-btn-green:hover {
+            transform: none !important;
+        }
+
+        body.win98-theme .glossy-btn:active,
+        body.win98-theme .glossy-btn-green:active {
+            box-shadow: 
+                inset 1px 1px 0 #0a0a0a,
+                inset -1px -1px 0 #ffffff,
+                inset 2px 2px 0 #808080,
+                inset -2px -2px 0 #dfdfdf !important;
+        }
+
+        /* Win98 Inputs */
+        body.win98-theme .input-aero,
+        body.win98-theme input,
+        body.win98-theme textarea {
+            background: #ffffff !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: 
+                inset 1px 1px 0 #0a0a0a,
+                inset -1px -1px 0 #ffffff,
+                inset 2px 2px 0 #808080,
+                inset -2px -2px 0 #dfdfdf !important;
+        }
+
+        body.win98-theme .input-aero:focus,
+        body.win98-theme input:focus,
+        body.win98-theme textarea:focus {
+            outline: 1px dotted #000000 !important;
+            outline-offset: -3px;
+        }
+
+        /* Win98 Game Cards */
+        body.win98-theme .game-card {
+            background: #c0c0c0 !important;
+            border-radius: 0 !important;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf !important;
+        }
+
+        body.win98-theme .game-card:hover {
+            transform: none !important;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf !important;
+        }
+
+        body.win98-theme .game-card img {
+            border-radius: 0 !important;
+            border: 2px solid #808080;
+        }
+
+        /* Win98 Text Colors */
+        body.win98-theme h1,
+        body.win98-theme h2,
+        body.win98-theme h3,
+        body.win98-theme p,
+        body.win98-theme span,
+        body.win98-theme label {
+            color: #000000 !important;
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: unset !important;
+            text-shadow: none !important;
+        }
+
+        body.win98-theme .text-gray-500,
+        body.win98-theme .text-gray-400,
+        body.win98-theme .text-gray-600 {
+            color: #000000 !important;
+        }
+
+        /* Win98 Modal Title Bars */
+        body.win98-theme .modal-aero {
+            padding-top: 28px !important;
+            position: relative;
+        }
+
+        body.win98-theme #login-modal .modal-aero::before {
+            content: '🔑 Entrar na Conta';
+        }
+
+        body.win98-theme #register-modal .modal-aero::before {
+            content: '📝 Criar Conta';
+        }
+
+        body.win98-theme #submit-modal .modal-aero::before {
+            content: '📤 Publicar Novo Jogo';
+        }
+
+        body.win98-theme #edit-modal .modal-aero::before {
+            content: '✏️ Editar Jogo';
+        }
+
+        body.win98-theme #profile-modal .modal-aero::before {
+            content: '👤 Perfil do Usuário';
+        }
+
+        body.win98-theme .modal-aero::before {
+            content: '📁 Janela';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 24px;
+            background: linear-gradient(90deg, #000080, #1084d0) !important;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Win98 Close Buttons */
+        body.win98-theme button[onclick*="closeModal"] {
+            position: absolute !important;
+            top: 2px !important;
+            right: 4px !important;
+            width: 18px !important;
+            height: 18px !important;
+            min-height: 18px !important;
+            padding: 0 !important;
+            font-size: 10px !important;
+            z-index: 10;
+        }
+
+        /* Win98 Scrollbar */
+        body.win98-theme ::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        body.win98-theme ::-webkit-scrollbar-track {
+            background: #c0c0c0;
+            border: 1px solid #808080;
+        }
+
+        body.win98-theme ::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 0;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf;
+        }
+
+        body.win98-theme ::-webkit-scrollbar-button {
+            background: #c0c0c0;
+            height: 16px;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff;
+        }
+
+        /* Win98 Footer */
+        body.win98-theme footer {
+            background: #c0c0c0 !important;
+            border-top: 2px solid #808080 !important;
+        }
+
+        /* Win98 Tags/Badges */
+        body.win98-theme span[class*="rounded-full"],
+        body.win98-theme span[class*="bg-gradient"] {
+            background: #c0c0c0 !important;
+            border: 1px solid #808080 !important;
+            border-radius: 0 !important;
+            color: #000000 !important;
+        }
+
+        /* Win98 Fire Effect - Simplified */
+        body.win98-theme .on-fire {
+            animation: none !important;
+            border: 3px dashed #ff0000 !important;
+            box-shadow: none !important;
+        }
+
+        body.win98-theme .on-fire::before {
+            content: '⭐ HOT!';
+            background: #ffff00;
+            color: #ff0000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border: 1px solid #000000;
+            animation: none !important;
+            filter: none !important;
+        }
+
+        body.win98-theme .on-fire::after {
+            background: #c0c0c0 !important;
+            color: #ff0000 !important;
+            border: 1px solid #808080 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Win98 Play Overlay */
+        body.win98-theme .play-overlay {
+            background: rgba(192, 192, 192, 0.95) !important;
+        }
+
+        /* Win98 Device Selection */
+        body.win98-theme #device-selection {
+            background: #008080 !important;
+        }
+
+        /* Win98 Play Modal */
+        body.win98-theme #play-modal > div {
+            background: #c0c0c0 !important;
+        }
+
+        body.win98-theme #play-modal iframe {
+            border: 2px inset #808080 !important;
+            border-radius: 0 !important;
+        }
+
+        /* ============================================= */
+        /* ========== OG CLASSIC EFFECT =============== */
+        /* ============================================= */
+
+        @keyframes ogStatic {
+            0%, 100% { opacity: 0.03; }
+            50% { opacity: 0.06; }
+        }
+
+        @keyframes vhsTracking {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(-2px); }
+            20% { transform: translateX(0); }
+            30% { transform: translateX(1px); }
+            40% { transform: translateX(0); }
+            100% { transform: translateX(0); }
+        }
+
+        .is-og {
+            border: 8px solid #2a2a2a !important;
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 8px !important;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.8),
+                0 8px 32px rgba(0,0,0,0.5),
+                0 0 0 3px #3a3a3a;
+        }
+
+        /* TV Frame outer bezel */
+        .is-og::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            border-radius: 12px;
+            z-index: -1;
+            box-shadow: 
+                inset 2px 2px 0 #5a5a5a,
+                inset -2px -2px 0 #0a0a0a,
+                0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        /* Control panel badge */
+        .is-og::after {
+            content: '▶ REC ● CH-01 ▮▮ ◀◀ ▶▶ ■';
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            color: #888;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 8px 20px;
+            white-space: nowrap;
+            z-index: 20;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            border: 2px solid #4a4a4a;
+            box-shadow: 
+                inset 1px 1px 0 #5a5a5a,
+                inset -1px -1px 0 #0a0a0a,
+                0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* VHS/Retro indicator light */
+        .is-og .og-rec-light {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 12px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+            z-index: 25;
+            animation: recBlink 1s steps(1) infinite;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+
+        @keyframes recBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.3; }
+        }
+
+        /* Channel indicator */
+        .is-og .og-channel {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            z-index: 25;
+            border: 1px solid #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .og-btn {
+            background: linear-gradient(180deg, #5a5a5a 0%, #3a3a3a 50%, #2a2a2a 100%);
+            border: 1px solid #4a4a4a;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.4),
+                inset 0 2px 0 rgba(255,255,255,0.1),
+                inset 0 -2px 0 rgba(0,0,0,0.2);
+        }
+
+        .og-btn:hover {
+            background: linear-gradient(180deg, #6a6a6a 0%, #4a4a4a 50%, #3a3a3a 100%);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.5),
+                inset 0 2px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Combined Fire + OG */
+        .on-fire.is-og {
+            animation: fireGlow 1.5s ease-in-out infinite;
+            border: 8px solid #4a3020 !important;
+            background: linear-gradient(45deg, #2a1a10, #1a1a1a);
+        }
+
+        .on-fire.is-og::before {
+            background: linear-gradient(180deg, #5a4030 0%, #3a2a1a 50%, #2a1a10 100%);
+        }
+
+        .on-fire.is-og::after {
+            content: '🔥 LEGENDARY 🔥 ▶ ■ ◀◀ ▶▶';
+            background: linear-gradient(180deg, #4a3020 0%, #3a2010 50%, #2a1000 100%);
+            color: #ff6600;
+            border-color: #ff6600;
+        }
+
+        /* Win98 OG Effect */
+        body.win98-theme .is-og {
+            animation: none !important;
+            border: 4px solid #808080 !important;
+            box-shadow: 
+                inset -2px -2px 0 #0a0a0a,
+                inset 2px 2px 0 #ffffff !important;
+            background: #c0c0c0 !important;
+        }
+
+        body.win98-theme .is-og::before {
+            display: none !important;
+        }
+
+        body.win98-theme .is-og::after {
+            content: '[ RETRO TV ]';
+            background: #c0c0c0 !important;
+            color: #000000 !important;
+            border: 2px solid #808080 !important;
+            border-radius: 0 !important;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff !important;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile OG - Simplified */
+        body.mobile-mode .is-og {
+            animation: none !important;
+            border: 6px solid #2a2a2a !important;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5) !important;
+        }
+
+        body.mobile-mode .is-og::before {
+            display: none !important;
+        }
+
+        body.mobile-mode .is-og::after {
+            font-size: 9px;
+            padding: 6px 12px;
+            bottom: -40px;
+        }
+
+        /* ============================================= */
+        /* ========== PINNED POST EFFECT ============== */
+        /* ============================================= */
+
+        .is-pinned {
+            order: -1 !important;
+            position: relative;
+        }
+
+        .is-pinned::before {
+            content: '📌';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 28px;
+            z-index: 30;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            transform: rotate(-15deg);
+        }
+
+        .pin-btn {
+            background: linear-gradient(180deg, #a855f7 0%, #9333ea 50%, #7e22ce 100%);
+            border: 1px solid #6b21a8;
+            box-shadow: 
+                0 4px 15px rgba(147, 51, 234, 0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4),
+                inset 0 -2px 0 rgba(0,0,0,0.1);
+        }
+
+        .pin-btn:hover {
+            background: linear-gradient(180deg, #c084fc 0%, #a855f7 50%, #9333ea 100%);
+            transform: translateY(-2px);
+        }
+
+        .pin-btn.active {
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+            border-color: #166534;
+        }
+
+        /* Win98 Pinned */
+        body.win98-theme .is-pinned::before {
+            content: '📌 FIXADO';
+            font-size: 11px;
+            background: #ffff00;
+            color: #000;
+            padding: 2px 6px;
+            border: 1px solid #000;
+            transform: none;
+            top: -8px;
+            left: -8px;
+        }
+
+        /* Win98 Profile Banner - Make it look like a window */
+        body.win98-theme #profile-banner {
+            background: linear-gradient(90deg, #000080, #1084d0) !important;
+            height: 24px !important;
+        }
+
+        body.win98-theme #profile-banner #profile-banner-preview {
+            display: none !important;
+        }
+
+        body.win98-theme #profile-avatar {
+            background: #c0c0c0 !important;
+            border: 2px solid #808080 !important;
+            border-radius: 0 !important;
+            margin-top: 10px !important;
+        }
+
+        /* Win98 Theme Button in Profile */
+        .win98-theme-btn {
+            background: #c0c0c0 !important;
+            font-family: 'MS Sans Serif', Tahoma, sans-serif;
+            font-size: 11px;
+            box-shadow: 
+                inset -1px -1px 0 #0a0a0a,
+                inset 1px 1px 0 #ffffff,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #dfdfdf;
+        }
+
+        .win98-theme-btn:active {
+            box-shadow: 
+                inset 1px 1px 0 #0a0a0a,
+                inset -1px -1px 0 #ffffff,
+                inset 2px 2px 0 #808080,
+                inset -2px -2px 0 #dfdfdf;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-gray-700">
@@ -592,10 +1206,24 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <h2 class="text-2xl font-bold text-sky-700 flex items-center gap-2">
                 <span class="w-1.5 h-8 bg-gradient-to-b from-sky-400 to-teal-400 rounded-full"></span>
-                Jogos Recentes
+                <span id="games-section-title">Jogos Recentes</span>
             </h2>
-            <div class="relative w-full md:w-72">
-                <input type="text" id="search-input" oninput="app.searchGames(this.value)" placeholder="🔍 Buscar jogos..." class="input-aero w-full py-2.5 px-4 pl-4 text-gray-700 placeholder-gray-400">
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+                <!-- Tabs -->
+                <div class="glass-card px-1 py-1 rounded-xl flex gap-1 justify-center sm:justify-start">
+                    <button id="tab-recent" onclick="app.setGamesTab('recent')" class="glossy-btn text-white text-sm font-bold px-4 py-2 rounded-lg whitespace-nowrap">
+                        <i class="fa-solid fa-clock mr-1"></i> Recentes
+                    </button>
+                    <button id="tab-popular" onclick="app.setGamesTab('popular')" class="text-sky-700 text-sm font-semibold px-4 py-2 rounded-lg whitespace-nowrap hover:bg-white/60 transition">
+                        <i class="fa-solid fa-chart-line mr-1"></i> Mais jogados
+                    </button>
+                </div>
+
+                <!-- Search -->
+                <div class="relative w-full sm:w-72">
+                    <input type="text" id="search-input" oninput="app.searchGames(this.value)" placeholder="🔍 Buscar jogos..." class="input-aero w-full py-2.5 px-4 pl-4 text-gray-700 placeholder-gray-400">
+                </div>
             </div>
         </div>
 
@@ -920,6 +1548,21 @@
                             <input type="url" id="profile-edit-avatar" placeholder="https://..." class="input-aero w-full py-2.5 px-4">
                             <p class="text-xs text-gray-400 mt-1">📷 Adicione uma foto ou GIF para seu avatar!</p>
                         </div>
+                        
+                        <!-- Theme Selection -->
+                        <div class="text-left">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">🎨 Tema Visual</label>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="app.selectTheme('aero')" id="btn-theme-aero" class="flex-1 py-3 px-3 rounded-lg text-sm font-bold border transition-all bg-gradient-to-b from-sky-100 to-teal-100 border-sky-300 text-sky-700 shadow-inner">
+                                    <i class="fa-solid fa-droplet mr-1"></i> Frutiger Aero
+                                </button>
+                                <button type="button" onclick="app.selectTheme('win98')" id="btn-theme-win98" class="flex-1 py-3 px-3 rounded-lg text-sm font-medium border transition-all bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200 win98-theme-btn">
+                                    <i class="fa-solid fa-window-maximize mr-1"></i> Windows 98
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">💾 Escolha a aparência do site!</p>
+                        </div>
+                        
                         <div class="flex gap-3 pt-2">
                             <button type="button" onclick="app.toggleProfileEdit(false)" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
                                 Cancelar
@@ -967,7 +1610,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // FIREBASE CONFIGURATION
         const firebaseConfig = {
@@ -991,7 +1634,9 @@
             state: {
                 currentUser: null,
                 games: [],
-                deviceMode: null
+                deviceMode: null,
+                gamesTab: 'recent',
+                searchQuery: ''
             },
 
             init() {
@@ -1000,8 +1645,16 @@
                 if (savedDevice) {
                     this.applyDeviceMode(savedDevice);
                 }
+                
+                // Check if theme was saved
+                const savedTheme = localStorage.getItem('glshub-theme');
+                if (savedTheme) {
+                    this.applyTheme(savedTheme);
+                }
+                
                 this.setupAuthListener();
                 this.setupGamesListener();
+                this.updateGamesTabUI();
                 
                 const iframe = document.getElementById('game-iframe');
                 if(iframe) {
@@ -1013,7 +1666,7 @@
             },
 
             setupAuthListener() {
-                onAuthStateChanged(auth, (user) => {
+                onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         this.state.currentUser = {
                             username: user.displayName || user.email.split('@')[0],
@@ -1024,6 +1677,17 @@
                         this.renderHeroCTA();
                         this.renderGames(); // Re-render games to show admin buttons
                         console.log("User logged in:", this.state.currentUser.username, "| Admin:", this.isAdmin());
+                        
+                        // Load user's theme preference from profile
+                        try {
+                            const profileRef = doc(db, "profiles", user.uid);
+                            const profileSnap = await getDoc(profileRef);
+                            if (profileSnap.exists() && profileSnap.data().theme) {
+                                this.applyTheme(profileSnap.data().theme);
+                            }
+                        } catch (e) {
+                            console.log("Could not load theme preference");
+                        }
                     } else {
                         this.state.currentUser = null;
                         this.renderNav();
@@ -1236,13 +1900,43 @@
                 }
             },
 
+            setGamesTab(tab) {
+                this.state.gamesTab = tab;
+                this.updateGamesTabUI();
+                this.renderGames();
+            },
+
+            updateGamesTabUI() {
+                const tabRecent = document.getElementById('tab-recent');
+                const tabPopular = document.getElementById('tab-popular');
+                const title = document.getElementById('games-section-title');
+
+                const isPopular = this.state.gamesTab === 'popular';
+
+                if (title) title.textContent = isPopular ? 'Jogos Mais Jogados' : 'Jogos Recentes';
+
+                if (tabRecent && tabPopular) {
+                    if (!isPopular) {
+                        tabRecent.className = "glossy-btn text-white text-sm font-bold px-4 py-2 rounded-lg whitespace-nowrap";
+                        tabPopular.className = "text-sky-700 text-sm font-semibold px-4 py-2 rounded-lg whitespace-nowrap hover:bg-white/60 transition";
+                    } else {
+                        tabPopular.className = "glossy-btn text-white text-sm font-bold px-4 py-2 rounded-lg whitespace-nowrap";
+                        tabRecent.className = "text-sky-700 text-sm font-semibold px-4 py-2 rounded-lg whitespace-nowrap hover:bg-white/60 transition";
+                    }
+                }
+            },
+
             searchGames(query) {
-                // Client-side filtering of the realtime list
-                const filtered = this.state.games.filter(g => 
-                    g.title.toLowerCase().includes(query.toLowerCase()) || 
-                    g.desc.toLowerCase().includes(query.toLowerCase())
-                );
-                this.renderGames(filtered);
+                // Store query and re-render respecting active tab + privacy rules
+                this.state.searchQuery = (query || '').trim();
+                this.renderGames();
+            },
+
+            formatViews(n) {
+                const num = Number(n || 0);
+                if (num < 1000) return String(num);
+                if (num < 1000000) return (num / 1000).toFixed(num % 1000 === 0 ? 0 : 1) + 'K';
+                return (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + 'M';
             },
 
             playGame(id) {
@@ -1252,6 +1946,14 @@
 
                 document.getElementById('play-title').innerText = game.title;
                 document.getElementById('play-author').innerText = '👤 ' + game.author;
+
+                // Increment views in background (best-effort)
+                try {
+                    const gameRef = doc(db, "games", id);
+                    updateDoc(gameRef, { views: increment(1) });
+                } catch (e) {
+                    console.log('Could not increment views');
+                }
                 
                 const iframe = document.getElementById('game-iframe');
                 
@@ -1436,6 +2138,72 @@
                 }
             },
 
+            // --- OG SYSTEM (Admin only) ---
+            async toggleOG(id) {
+                // Only admin can toggle OG
+                if (!this.isAdmin()) {
+                    alert('Apenas administradores podem marcar jogos como OG.');
+                    return;
+                }
+
+                const game = this.state.games.find(g => g.id === id);
+                if (!game) return;
+
+                try {
+                    const gameRef = doc(db, "games", id);
+                    const newOGState = !game.isOG;
+                    
+                    await updateDoc(gameRef, {
+                        isOG: newOGState
+                    });
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                    
+                    if (newOGState) {
+                        this.showToast('📺 Jogo marcado como RETRO TV!', 'gray');
+                    } else {
+                        this.showToast('📺 Marcação Retro removida.', 'gray');
+                    }
+
+                } catch (error) {
+                    console.error("Error toggling OG: ", error);
+                    alert("Erro ao alterar status OG.");
+                }
+            },
+
+            // --- PIN SYSTEM (Admin only) ---
+            async togglePin(id) {
+                // Only admin can pin posts
+                if (!this.isAdmin()) {
+                    alert('Apenas administradores podem fixar jogos.');
+                    return;
+                }
+
+                const game = this.state.games.find(g => g.id === id);
+                if (!game) return;
+
+                try {
+                    const gameRef = doc(db, "games", id);
+                    const newPinState = !game.isPinned;
+                    
+                    await updateDoc(gameRef, {
+                        isPinned: newPinState
+                    });
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                    
+                    if (newPinState) {
+                        this.showToast('📌 Jogo fixado no topo!', 'purple');
+                    } else {
+                        this.showToast('📌 Jogo desafixado.', 'gray');
+                    }
+
+                } catch (error) {
+                    console.error("Error toggling pin: ", error);
+                    alert("Erro ao fixar/desafixar jogo.");
+                }
+            },
+
             // --- UI RENDERING ---
 
             renderNav() {
@@ -1516,6 +2284,24 @@
                     return game.uid === this.state.currentUser.uid; // Owner sees their own
                 });
 
+                // Apply search query
+                const q = (this.state.searchQuery || '').toLowerCase();
+                if (q) {
+                    list = list.filter(g => (g.title || '').toLowerCase().includes(q) || (g.desc || '').toLowerCase().includes(q));
+                }
+
+                // Sort: Pinned games first, then by selected tab
+                list = list.sort((a, b) => {
+                    if (a.isPinned && !b.isPinned) return -1;
+                    if (!a.isPinned && b.isPinned) return 1;
+
+                    if (this.state.gamesTab === 'popular') {
+                        return (b.views || 0) - (a.views || 0);
+                    }
+
+                    return (b.timestamp || 0) - (a.timestamp || 0);
+                });
+
                 grid.innerHTML = '';
 
                 if (list.length === 0) {
@@ -1527,7 +2313,9 @@
                 list.forEach(game => {
                     const card = document.createElement('div');
                     const fireClass = game.onFire ? 'on-fire' : '';
-                    card.className = `game-card glass-card overflow-hidden flex flex-col h-full ${fireClass}`;
+                    const ogClass = game.isOG ? 'is-og' : '';
+                    const pinnedClass = game.isPinned ? 'is-pinned' : '';
+                    card.className = `game-card glass-card overflow-hidden flex flex-col h-full ${fireClass} ${ogClass} ${pinnedClass}`;
                     
                     // Check if current user is the owner OR admin
                     const isOwner = this.state.currentUser && (game.uid === this.state.currentUser.uid || this.isAdmin());
@@ -1538,6 +2326,13 @@
                             <i class="fa-solid fa-lock text-[10px]"></i> Privado
                         </span>
                     ` : '';
+
+                    // Views badge
+                    const viewsBadge = `
+                        <span class="absolute top-2 ${game.isPrivate ? 'right-2' : 'left-2'} bg-white/85 text-gray-700 text-xs px-2 py-1 rounded-full z-10 flex items-center gap-1 shadow-lg border border-white/60">
+                            <i class="fa-solid fa-eye text-[10px] text-sky-600"></i> ${this.formatViews(game.views || 0)}
+                        </span>
+                    `;
                     
                     // Fire button (only for admin)
                     const fireButton = this.isAdmin() ? `
@@ -1546,12 +2341,28 @@
                         </button>
                     ` : '';
 
+                    // OG button (only for admin)
+                    const ogButton = this.isAdmin() ? `
+                        <button onclick="event.stopPropagation(); app.toggleOG('${game.id}')" class="${game.isOG ? 'og-btn' : 'bg-white/90 hover:bg-gray-200'} text-gray-600 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="${game.isOG ? 'Remover Retro TV' : 'Marcar como Retro/OG'}">
+                            <i class="fa-solid fa-tv text-sm"></i>
+                        </button>
+                    ` : '';
+
+                    // Pin button (only for admin)
+                    const pinButton = this.isAdmin() ? `
+                        <button onclick="event.stopPropagation(); app.togglePin('${game.id}')" class="${game.isPinned ? 'pin-btn active' : 'pin-btn'} text-white p-2 rounded-lg shadow-md border border-white/50 transition-all" title="${game.isPinned ? 'Desafixar' : 'Fixar no Topo'}">
+                            <i class="fa-solid fa-thumbtack text-sm"></i>
+                        </button>
+                    ` : '';
+
                     // Edit/Delete buttons (only for owner) - different for mobile/pc
                     const isMobile = this.isMobileMode();
                     
                     const ownerButtons = isOwner ? `
                         <div class="absolute top-2 right-2 flex gap-1 ${isMobile ? 'opacity-100 mobile-actions' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-10">
+                            ${pinButton}
                             ${fireButton}
+                            ${ogButton}
                             <button onclick="event.stopPropagation(); app.openEditModal('${game.id}')" class="bg-white/90 hover:bg-amber-100 text-amber-600 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="Editar">
                                 <i class="fa-solid fa-pen text-sm"></i>
                             </button>
@@ -1561,7 +2372,9 @@
                         </div>
                     ` : (this.isAdmin() ? `
                         <div class="absolute top-2 right-2 flex gap-1 ${isMobile ? 'opacity-100 mobile-actions' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-10">
+                            ${pinButton}
                             ${fireButton}
+                            ${ogButton}
                         </div>
                     ` : '');
                     
@@ -1577,6 +2390,7 @@
                     card.innerHTML = `
                         <div class="h-48 overflow-hidden relative group cursor-pointer" onclick="app.playGame('${game.id}')">
                             ${privateBadge}
+                            ${viewsBadge}
                             ${ownerButtons}
                             <img src="${game.thumb}" alt="${game.title}" class="w-full h-full object-cover ${isMobile ? '' : 'group-hover:scale-110'} transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/87CEEB/FFF?text=🎮'">
                             ${isMobile ? mobilePlayOverlay : `
@@ -1619,7 +2433,9 @@
                 const toast = document.createElement('div');
                 const bgColor = color === 'green' ? 'from-green-400 to-teal-400' : 
                                color === 'sky' ? 'from-sky-400 to-cyan-400' : 
-                               color === 'orange' ? 'from-orange-400 to-red-500' : 'from-gray-400 to-gray-500';
+                               color === 'orange' ? 'from-orange-400 to-red-500' : 
+                               color === 'purple' ? 'from-purple-500 to-pink-500' :
+                               color === 'og' ? 'from-gray-600 to-gray-700' : 'from-gray-400 to-gray-500';
                 toast.className = `fixed bottom-5 right-5 bg-gradient-to-r ${bgColor} text-white px-6 py-3 rounded-xl shadow-xl z-[100] font-medium border border-white/30`;
                 toast.style.boxShadow = '0 10px 40px rgba(0,100,150,0.3)';
                 toast.innerHTML = message;
@@ -1667,6 +2483,9 @@
             goHome() {
                 const search = document.getElementById('search-input');
                 if(search) search.value = '';
+                this.state.searchQuery = '';
+                this.state.gamesTab = 'recent';
+                this.updateGamesTabUI();
                 this.renderGames();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
@@ -1799,6 +2618,9 @@
                         document.getElementById('profile-edit-url').value = profile.url || '';
                         document.getElementById('profile-edit-banner').value = profile.banner || '';
                         document.getElementById('profile-edit-avatar').value = profile.avatar || '';
+                        
+                        // Set theme button state
+                        this.selectTheme(profile.theme || 'aero');
                     } else {
                         editBtn.classList.add('hidden');
                     }
@@ -1830,6 +2652,34 @@
                 }
             },
 
+            // Theme state
+            currentTheme: 'aero',
+
+            selectTheme(theme) {
+                this.currentTheme = theme;
+                
+                const btnAero = document.getElementById('btn-theme-aero');
+                const btnWin98 = document.getElementById('btn-theme-win98');
+                
+                if (theme === 'aero') {
+                    btnAero.className = "flex-1 py-3 px-3 rounded-lg text-sm font-bold border transition-all bg-gradient-to-b from-sky-100 to-teal-100 border-sky-300 text-sky-700 shadow-inner";
+                    btnWin98.className = "flex-1 py-3 px-3 rounded-lg text-sm font-medium border transition-all bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200 win98-theme-btn";
+                } else {
+                    btnWin98.className = "flex-1 py-3 px-3 text-sm font-bold border transition-all bg-gray-300 border-gray-500 text-gray-800 win98-theme-btn";
+                    btnAero.className = "flex-1 py-3 px-3 rounded-lg text-sm font-medium border transition-all bg-gray-100 border-gray-300 text-gray-500 hover:bg-gray-200";
+                }
+            },
+
+            applyTheme(theme) {
+                if (theme === 'win98') {
+                    document.body.classList.add('win98-theme');
+                } else {
+                    document.body.classList.remove('win98-theme');
+                }
+                this.currentTheme = theme;
+                localStorage.setItem('glshub-theme', theme);
+            },
+
             async handleSaveProfile(e) {
                 e.preventDefault();
                 
@@ -1840,6 +2690,7 @@
                 const url = document.getElementById('profile-edit-url').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
                 const banner = document.getElementById('profile-edit-banner').value.trim();
                 const avatar = document.getElementById('profile-edit-avatar').value.trim();
+                const theme = this.currentTheme;
                 
                 if (!displayName) {
                     alert('Por favor, insira um nome de exibição.');
@@ -1854,8 +2705,12 @@
                         url,
                         banner,
                         avatar,
+                        theme,
                         updatedAt: Date.now()
                     }, { merge: true });
+                    
+                    // Apply theme immediately
+                    this.applyTheme(theme);
                     
                     // Update auth profile display name
                     await updateProfile(auth.currentUser, {
