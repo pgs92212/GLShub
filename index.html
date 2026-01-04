@@ -1076,9 +1076,69 @@
                 inset 2px 2px 0 #808080,
                 inset -2px -2px 0 #dfdfdf;
         }
+
+        /* =============================== */
+        /* Fix: Effects must not block UI */
+        /* =============================== */
+        .on-fire::before,
+        .on-fire::after,
+        .is-og::before,
+        .is-og::after,
+        .is-pinned::before {
+            pointer-events: none;
+        }
+
+        /* ============================================= */
+        /* ========== CURSOR EYES EASTER EGG =========== */
+        /* ============================================= */
+        #cursor-eyes-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        body.eyes-cursor #cursor-eyes-layer {
+            display: block;
+        }
+
+        body.mobile-mode #cursor-eyes-layer {
+            display: none !important;
+        }
+
+        .eye-spark {
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+            opacity: 1;
+            will-change: transform, opacity;
+            --dx: 0px;
+            --dy: -28px;
+            --rot: 0deg;
+            animation: eyeFloat 0.85s ease-out forwards;
+        }
+
+        @keyframes eyeFloat {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(var(--rot));
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.65) rotate(var(--rot));
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-gray-700">
+
+    <!-- Cursor Eyes Layer (Easter Egg) -->
+    <div id="cursor-eyes-layer"></div>
 
     <!-- Device Selection Screen -->
     <div id="device-selection" class="fixed inset-0 z-[100] flex items-center justify-center" style="background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 30%, #B2EBF2 60%, #4FC3F7 100%);">
@@ -1562,6 +1622,20 @@
                             </div>
                             <p class="text-xs text-gray-400 mt-1">💾 Escolha a aparência do site!</p>
                         </div>
+
+                        <!-- Admin Only: Cursor Eyes Toggle -->
+                        <div id="admin-eyes-setting" class="text-left hidden">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">👀 Efeito no Cursor (Admin)</label>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="app.setAdminEyes(true)" id="btn-eyes-on" class="flex-1 py-2.5 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50">
+                                    <i class="fa-solid fa-eye mr-1"></i> Ativar
+                                </button>
+                                <button type="button" onclick="app.setAdminEyes(false)" id="btn-eyes-off" class="flex-1 py-2.5 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner">
+                                    <i class="fa-solid fa-eye-slash mr-1"></i> Desativar
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Disponível apenas para <strong>admin12ofcl@gmail.com</strong>. Funciona apenas no modo PC.</p>
+                        </div>
                         
                         <div class="flex gap-3 pt-2">
                             <button type="button" onclick="app.toggleProfileEdit(false)" class="flex-1 py-3 px-4 rounded-lg font-semibold border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
@@ -1606,11 +1680,38 @@
         </div>
     </div>
 
+    <!-- Community Chat Modal -->
+    <div id="chat-modal" class="fixed inset-0 z-[80] hidden overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-sky-900/30 backdrop-blur-sm transition-opacity" onclick="app.closeModal('chat-modal')"></div>
+            <div class="modal-aero inline-block align-middle max-w-2xl w-full p-0 relative z-10 transform transition-all overflow-hidden">
+                <div class="p-5 flex items-center justify-between border-b border-sky-100">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-sky-600 to-teal-500 bg-clip-text text-transparent">
+                        <i class="fa-solid fa-comments mr-2"></i>Chat da Comunidade
+                    </h3>
+                    <button onclick="app.closeModal('chat-modal')" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-times"></i></button>
+                </div>
+
+                <div class="p-4">
+                    <div id="chat-messages" class="h-[55vh] md:h-[60vh] overflow-y-auto rounded-xl border border-sky-100 bg-white/70 p-3 text-left space-y-2"></div>
+
+                    <div class="mt-3 flex gap-2 items-stretch">
+                        <input id="chat-input" type="text" placeholder="Digite uma mensagem..." class="input-aero flex-1 py-2.5 px-4" maxlength="300" />
+                        <button onclick="app.sendChatMessage()" class="glossy-btn text-white font-semibold px-5 rounded-lg">
+                            <i class="fa-solid fa-paper-plane mr-2"></i>Enviar
+                        </button>
+                    </div>
+                    <p id="chat-hint" class="text-xs text-gray-400 mt-2 text-left">Você precisa estar logado para enviar mensagens.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc, increment, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // FIREBASE CONFIGURATION
         const firebaseConfig = {
@@ -1636,7 +1737,9 @@
                 games: [],
                 deviceMode: null,
                 gamesTab: 'recent',
-                searchQuery: ''
+                searchQuery: '',
+                chatMessages: [],
+                chatReady: false
             },
 
             init() {
@@ -1654,6 +1757,7 @@
                 
                 this.setupAuthListener();
                 this.setupGamesListener();
+                this.setupChatListener();
                 this.updateGamesTabUI();
                 
                 const iframe = document.getElementById('game-iframe');
@@ -1678,21 +1782,34 @@
                         this.renderGames(); // Re-render games to show admin buttons
                         console.log("User logged in:", this.state.currentUser.username, "| Admin:", this.isAdmin());
                         
-                        // Load user's theme preference from profile
+                        // Load user's preferences from profile (theme + admin eyes toggle)
                         try {
                             const profileRef = doc(db, "profiles", user.uid);
                             const profileSnap = await getDoc(profileRef);
-                            if (profileSnap.exists() && profileSnap.data().theme) {
-                                this.applyTheme(profileSnap.data().theme);
+                            if (profileSnap.exists()) {
+                                const data = profileSnap.data() || {};
+                                if (data.theme) this.applyTheme(data.theme);
+                                // Only admin can use this, but safe to read
+                                this.adminEyesEnabled = !!data.eyesCursor;
+                            } else {
+                                this.adminEyesEnabled = false;
                             }
                         } catch (e) {
-                            console.log("Could not load theme preference");
+                            console.log("Could not load profile preferences");
+                            this.adminEyesEnabled = false;
                         }
+
+                        // Apply eyes cursor (special user always on, admin optional)
+                        this.updateAdminEyesUI();
+                        this.setEyesCursorEnabled(this.shouldEyesBeEnabled());
                     } else {
                         this.state.currentUser = null;
+                        this.adminEyesEnabled = false;
                         this.renderNav();
                         this.renderHeroCTA();
                         this.renderGames(); // Re-render games to hide admin buttons
+                        this.updateAdminEyesUI();
+                        this.setEyesCursorEnabled(false);
                         console.log("User logged out");
                     }
                 });
@@ -1709,6 +1826,135 @@
                 }, (error) => {
                     console.error("Error getting games:", error);
                 });
+            },
+
+            // --- CHAT ---
+            setupChatListener() {
+                const messagesEl = document.getElementById('chat-messages');
+                if (!messagesEl) return;
+
+                // Last 150 messages, oldest->newest (query newest then reverse)
+                const q = query(collection(db, 'chat'), orderBy('createdAt', 'desc'), limit(150));
+                onSnapshot(q, (snap) => {
+                    const items = [];
+                    snap.forEach((d) => items.push({ id: d.id, ...d.data() }));
+                    items.reverse();
+                    this.state.chatMessages = items;
+                    this.state.chatReady = true;
+                    this.renderChat(true);
+                }, (err) => {
+                    console.error('Error getting chat:', err);
+                    this.state.chatReady = false;
+                    this.renderChat(false);
+                });
+
+                // UX: send on Enter
+                const input = document.getElementById('chat-input');
+                if (input && !input.dataset.bound) {
+                    input.dataset.bound = '1';
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            this.sendChatMessage();
+                        }
+                    });
+                }
+            },
+
+            renderChat(autoScroll = false) {
+                const list = document.getElementById('chat-messages');
+                const hint = document.getElementById('chat-hint');
+                const input = document.getElementById('chat-input');
+                if (!list || !hint || !input) return;
+
+                // permissions
+                const canSend = !!this.state.currentUser;
+                input.disabled = !canSend;
+                input.placeholder = canSend ? 'Digite uma mensagem...' : 'Entre para conversar...';
+                hint.style.display = canSend ? 'none' : 'block';
+
+                if (!this.state.chatReady) {
+                    list.innerHTML = `<div class="text-center text-gray-400 py-6"><i class="fa-solid fa-circle-notch animate-spin mr-2"></i>Carregando chat...</div>`;
+                    return;
+                }
+
+                const esc = (s) => String(s || '')
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#039;');
+
+                if (this.state.chatMessages.length === 0) {
+                    list.innerHTML = `<div class="text-center text-gray-400 py-10">Nenhuma mensagem ainda. Seja o primeiro a falar!</div>`;
+                    return;
+                }
+
+                const myUid = this.state.currentUser?.uid;
+                const isAdmin = this.isAdmin();
+
+                list.innerHTML = this.state.chatMessages.map(m => {
+                    const mine = myUid && m.uid === myUid;
+                    const adminBadge = (m.email && String(m.email).toLowerCase() === 'admin12ofcl@gmail.com') ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white border border-white/40">ADMIN</span>` : '';
+
+                    const bubbleClass = mine
+                        ? 'bg-gradient-to-r from-sky-400 to-cyan-400 text-white border-white/30'
+                        : 'bg-white/90 text-gray-700 border-sky-100';
+
+                    const align = mine ? 'justify-end' : 'justify-start';
+
+                    return `
+                        <div class="flex ${align}">
+                            <div class="max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-2 border shadow-sm ${bubbleClass}">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="text-xs font-semibold ${mine ? 'text-white/95' : 'text-sky-700'}">${esc(m.author || 'Anon')}</span>
+                                    ${adminBadge}
+                                </div>
+                                <div class="text-sm leading-snug break-words">${esc(m.text || '')}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                if (autoScroll) {
+                    list.scrollTop = list.scrollHeight;
+                }
+            },
+
+            async sendChatMessage() {
+                if (!this.state.currentUser) {
+                    this.openModal('login-modal');
+                    return;
+                }
+
+                const input = document.getElementById('chat-input');
+                if (!input) return;
+
+                const text = (input.value || '').trim();
+                if (!text) return;
+
+                // Basic spam limits
+                if (text.length > 300) {
+                    this.showToast('⚠️ Mensagem muito longa (máx 300).', 'gray');
+                    return;
+                }
+
+                const payload = {
+                    text,
+                    uid: this.state.currentUser.uid,
+                    author: this.state.currentUser.username,
+                    email: this.state.currentUser.email,
+                    createdAt: serverTimestamp()
+                };
+
+                try {
+                    input.value = '';
+                    await addDoc(collection(db, 'chat'), payload);
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                } catch (e) {
+                    console.error('Error sending chat message:', e);
+                    this.showToast('❌ Erro ao enviar mensagem.', 'gray');
+                }
             },
 
             // --- AUTH ---
@@ -1794,6 +2040,115 @@
             isAdmin() {
                 if (!this.state.currentUser || !this.state.currentUser.email) return false;
                 return this.state.currentUser.email.toLowerCase() === 'admin12ofcl@gmail.com';
+            },
+
+            // --- EASTER EGG: EYES CURSOR ---
+            // Special user: always enabled
+            isEyesUser() {
+                const email = this.state.currentUser?.email;
+                if (!email) return false;
+                return String(email).toLowerCase() === 'mussulininunis915@gmail.com';
+            },
+
+            // Admin optional toggle (stored in profile)
+            adminEyesEnabled: false,
+
+            shouldEyesBeEnabled() {
+                // Always on for the special user
+                if (this.isEyesUser()) return true;
+
+                // Admin can enable it from profile settings
+                if (this.isAdmin() && this.adminEyesEnabled) return true;
+
+                return false;
+            },
+
+            setEyesCursorEnabled(enabled) {
+                // Only makes sense on PC mode
+                const shouldEnable = !!enabled && !this.isMobileMode();
+                document.body.classList.toggle('eyes-cursor', shouldEnable);
+
+                // lazy init listeners
+                if (shouldEnable) {
+                    this.bindEyesCursor();
+                }
+            },
+
+            setAdminEyes(enabled) {
+                if (!this.isAdmin()) return;
+                this.adminEyesEnabled = !!enabled;
+                this.updateAdminEyesUI();
+                this.setEyesCursorEnabled(this.shouldEyesBeEnabled());
+            },
+
+            updateAdminEyesUI() {
+                const wrap = document.getElementById('admin-eyes-setting');
+                const btnOn = document.getElementById('btn-eyes-on');
+                const btnOff = document.getElementById('btn-eyes-off');
+                if (!wrap || !btnOn || !btnOff) return;
+
+                if (this.isAdmin()) {
+                    wrap.classList.remove('hidden');
+                } else {
+                    wrap.classList.add('hidden');
+                    return;
+                }
+
+                if (this.adminEyesEnabled) {
+                    btnOn.className = "flex-1 py-2.5 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner";
+                    btnOff.className = "flex-1 py-2.5 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                } else {
+                    btnOff.className = "flex-1 py-2.5 px-3 rounded-lg text-sm font-bold border transition-all bg-sky-100 border-sky-300 text-sky-700 shadow-inner";
+                    btnOn.className = "flex-1 py-2.5 px-3 rounded-lg text-sm font-medium border transition-all bg-white border-gray-300 text-gray-500 hover:bg-gray-50";
+                }
+            },
+
+            bindEyesCursor() {
+                if (this._eyesBound) return;
+                this._eyesBound = true;
+
+                const layer = document.getElementById('cursor-eyes-layer');
+                if (!layer) return;
+
+                let lastSpawn = 0;
+                let lastX = 0;
+                let lastY = 0;
+
+                const spawn = (x, y) => {
+                    // avoid spamming too much
+                    const now = performance.now();
+                    if (now - lastSpawn < 45) return;
+                    lastSpawn = now;
+
+                    // spawn only if moved enough
+                    const dxm = x - lastX;
+                    const dym = y - lastY;
+                    if (Math.hypot(dxm, dym) < 10) return;
+                    lastX = x;
+                    lastY = y;
+
+                    const el = document.createElement('div');
+                    el.className = 'eye-spark';
+                    el.textContent = '👀';
+
+                    const dx = (Math.random() * 24 - 12).toFixed(1) + 'px';
+                    const dy = (-20 - Math.random() * 26).toFixed(1) + 'px';
+                    const rot = (Math.random() * 50 - 25).toFixed(1) + 'deg';
+                    el.style.setProperty('--dx', dx);
+                    el.style.setProperty('--dy', dy);
+                    el.style.setProperty('--rot', rot);
+                    el.style.left = x + 'px';
+                    el.style.top = y + 'px';
+
+                    layer.appendChild(el);
+                    // cleanup
+                    setTimeout(() => el.remove(), 950);
+                };
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!document.body.classList.contains('eyes-cursor')) return;
+                    spawn(e.clientX, e.clientY);
+                }, { passive: true });
             },
 
             // --- GAMES CRUD ---
@@ -2216,12 +2571,16 @@
                 if (this.state.currentUser) {
                     const userHtml = `
                         <a href="#" onclick="app.openModal('submit-modal')" class="glossy-btn text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fa-solid fa-plus mr-1"></i> Publicar</a>
+                        <a href="#" onclick="app.openChat()" class="text-sky-600 px-4 py-2 text-sm font-medium border border-sky-300 rounded-full bg-sky-50 hover:bg-sky-100 transition-colors">
+                            <i class="fa-solid fa-comments mr-1"></i> Chat
+                        </a>
                         <a href="#" onclick="app.openProfile('${this.state.currentUser.uid}')" class="text-sky-600 px-4 py-2 text-sm font-medium border border-sky-300 rounded-full bg-sky-50 hover:bg-sky-100 transition-colors">👤 ${this.state.currentUser.username}</a>
                         <a href="#" onclick="app.logout()" class="text-red-400 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium"><i class="fa-solid fa-sign-out-alt"></i></a>
                     `;
                     
                     const mobileUserHtml = `
                         <a href="#" onclick="app.openModal('submit-modal')" class="text-sky-600 hover:bg-sky-50 block px-3 py-2 rounded-md text-base font-medium">📤 Publicar Jogo</a>
+                        <a href="#" onclick="app.openChat()" class="text-sky-600 hover:bg-sky-50 block px-3 py-2 rounded-md text-base font-medium">💬 Chat</a>
                         <a href="#" onclick="app.openProfile('${this.state.currentUser.uid}')" class="text-purple-600 hover:bg-purple-50 block px-3 py-2 rounded-md text-base font-medium">👤 Meu Perfil</a>
                         <a href="#" onclick="app.logout()" class="text-red-400 hover:bg-red-50 block px-3 py-2 rounded-md text-base font-medium">🚪 Sair</a>
                     `;
@@ -2230,11 +2589,15 @@
                     mobileHtml = mobileUserHtml;
                 } else {
                     const guestHtml = `
+                        <a href="#" onclick="app.openChat()" class="text-sky-600 hover:text-sky-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fa-solid fa-comments mr-1"></i> Chat
+                        </a>
                         <a href="#" onclick="app.openModal('login-modal')" class="text-gray-600 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Entrar</a>
                         <a href="#" onclick="app.openModal('register-modal')" class="glossy-btn-green text-white px-4 py-2 rounded-lg text-sm font-medium">Criar Conta</a>
                     `;
 
                     const mobileGuestHtml = `
+                        <a href="#" onclick="app.openChat()" class="text-sky-600 hover:bg-sky-50 block px-3 py-2 rounded-md text-base font-medium">💬 Chat</a>
                         <a href="#" onclick="app.openModal('login-modal')" class="text-gray-600 hover:bg-sky-50 block px-3 py-2 rounded-md text-base font-medium">🔑 Entrar</a>
                         <a href="#" onclick="app.openModal('register-modal')" class="text-green-600 hover:bg-green-50 block px-3 py-2 rounded-md text-base font-medium">✨ Criar Conta</a>
                     `;
@@ -2359,7 +2722,7 @@
                     const isMobile = this.isMobileMode();
                     
                     const ownerButtons = isOwner ? `
-                        <div class="absolute top-2 right-2 flex gap-1 ${isMobile ? 'opacity-100 mobile-actions' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-10">
+                        <div class="absolute top-2 right-2 flex gap-1 ${isMobile ? 'opacity-100 mobile-actions' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-50">
                             ${pinButton}
                             ${fireButton}
                             ${ogButton}
@@ -2454,6 +2817,12 @@
                 if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playPop();
             },
 
+            openChat() {
+                this.openModal('chat-modal');
+                // refresh chat UI state (send permissions) and scroll to bottom
+                this.renderChat(true);
+            },
+
             closeModal(id) {
                 if (id === 'play-modal') {
                     const iframe = document.getElementById('game-iframe');
@@ -2524,6 +2893,9 @@
                 
                 // Update switch button text
                 this.updateSwitchModeButton();
+
+                // Re-evaluate cursor easter egg for the special user / admin toggle
+                this.setEyesCursorEnabled(this.shouldEyesBeEnabled());
                 
                 // Re-render games with correct mode
                 this.renderGames();
@@ -2621,8 +2993,15 @@
                         
                         // Set theme button state
                         this.selectTheme(profile.theme || 'aero');
+
+                        // Admin-only: load eyes cursor setting
+                        if (this.isAdmin()) {
+                            this.adminEyesEnabled = !!profile.eyesCursor;
+                        }
+                        this.updateAdminEyesUI();
                     } else {
                         editBtn.classList.add('hidden');
+                        this.updateAdminEyesUI();
                     }
                     
                     // Store current profile uid for saving
@@ -2699,7 +3078,7 @@
                 
                 try {
                     const profileRef = doc(db, "profiles", this.state.currentUser.uid);
-                    await setDoc(profileRef, {
+                    const payload = {
                         displayName,
                         bio,
                         url,
@@ -2707,10 +3086,20 @@
                         avatar,
                         theme,
                         updatedAt: Date.now()
-                    }, { merge: true });
+                    };
+
+                    // Admin can persist the cursor eyes toggle
+                    if (this.isAdmin()) {
+                        payload.eyesCursor = !!this.adminEyesEnabled;
+                    }
+
+                    await setDoc(profileRef, payload, { merge: true });
                     
                     // Apply theme immediately
                     this.applyTheme(theme);
+
+                    // Apply eyes cursor immediately
+                    this.setEyesCursorEnabled(this.shouldEyesBeEnabled());
                     
                     // Update auth profile display name
                     await updateProfile(auth.currentUser, {
