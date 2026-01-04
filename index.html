@@ -188,6 +188,86 @@
             border-radius: 16px;
         }
 
+        /* Fire Animation */
+        @keyframes fireGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px #ff6600,
+                    0 0 40px #ff4500,
+                    0 0 60px #ff3300,
+                    0 0 80px #ff0000,
+                    inset 0 0 20px rgba(255, 100, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px #ff8800,
+                    0 0 50px #ff6600,
+                    0 0 70px #ff4500,
+                    0 0 90px #ff2200,
+                    inset 0 0 30px rgba(255, 100, 0, 0.5);
+            }
+        }
+
+        @keyframes fireFlicker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            25% { opacity: 0.9; transform: scale(1.02); }
+            50% { opacity: 1; transform: scale(0.98); }
+            75% { opacity: 0.95; transform: scale(1.01); }
+        }
+
+        .on-fire {
+            animation: fireGlow 1.5s ease-in-out infinite, fireFlicker 0.5s ease-in-out infinite;
+            border: 3px solid #ff6600 !important;
+            position: relative;
+        }
+
+        .on-fire::before {
+            content: '🔥';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            z-index: 20;
+            animation: fireFlicker 0.3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px #ff6600);
+        }
+
+        .on-fire::after {
+            content: '🔥 EM DESTAQUE 🔥';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #ff6600, #ff4500, #ff0000);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            z-index: 20;
+            box-shadow: 0 4px 15px rgba(255, 100, 0, 0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .fire-btn {
+            background: linear-gradient(180deg, #ffcc00 0%, #ff8800 50%, #ff4400 100%);
+            border: 1px solid #ff6600;
+            box-shadow: 
+                0 4px 15px rgba(255, 100, 0, 0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4),
+                inset 0 -2px 0 rgba(0,0,0,0.1);
+        }
+
+        .fire-btn:hover {
+            background: linear-gradient(180deg, #ffdd44 0%, #ffaa00 50%, #ff6600 100%);
+            box-shadow: 
+                0 6px 20px rgba(255, 100, 0, 0.6),
+                inset 0 2px 0 rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
         /* Leaf decoration */
         .leaf-decoration {
             position: fixed;
@@ -1109,6 +1189,39 @@
                 }
             },
 
+            // --- FIRE SYSTEM (Admin only) ---
+            async toggleFire(id) {
+                // Only admin can toggle fire
+                if (!this.isAdmin()) {
+                    alert('Apenas administradores podem destacar jogos.');
+                    return;
+                }
+
+                const game = this.state.games.find(g => g.id === id);
+                if (!game) return;
+
+                try {
+                    const gameRef = doc(db, "games", id);
+                    const newFireState = !game.onFire;
+                    
+                    await updateDoc(gameRef, {
+                        onFire: newFireState
+                    });
+                    
+                    if (window.SoundFX && window.SoundFX.audioContext) window.SoundFX.playSuccess();
+                    
+                    if (newFireState) {
+                        this.showToast('🔥 Jogo colocado em destaque!', 'orange');
+                    } else {
+                        this.showToast('❄️ Destaque removido do jogo.', 'gray');
+                    }
+
+                } catch (error) {
+                    console.error("Error toggling fire: ", error);
+                    alert("Erro ao alterar destaque.");
+                }
+            },
+
             // --- UI RENDERING ---
 
             renderNav() {
@@ -1199,7 +1312,8 @@
 
                 list.forEach(game => {
                     const card = document.createElement('div');
-                    card.className = "game-card glass-card overflow-hidden flex flex-col h-full";
+                    const fireClass = game.onFire ? 'on-fire' : '';
+                    card.className = `game-card glass-card overflow-hidden flex flex-col h-full ${fireClass}`;
                     
                     // Check if current user is the owner OR admin
                     const isOwner = this.state.currentUser && (game.uid === this.state.currentUser.uid || this.isAdmin());
@@ -1211,9 +1325,17 @@
                         </span>
                     ` : '';
                     
+                    // Fire button (only for admin)
+                    const fireButton = this.isAdmin() ? `
+                        <button onclick="event.stopPropagation(); app.toggleFire('${game.id}')" class="${game.onFire ? 'fire-btn' : 'bg-white/90 hover:bg-orange-100'} text-orange-500 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="${game.onFire ? 'Remover Destaque' : 'Colocar em Destaque'}">
+                            <i class="fa-solid fa-fire text-sm"></i>
+                        </button>
+                    ` : '';
+
                     // Edit/Delete buttons (only for owner)
                     const ownerButtons = isOwner ? `
                         <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            ${fireButton}
                             <button onclick="event.stopPropagation(); app.openEditModal('${game.id}')" class="bg-white/90 hover:bg-amber-100 text-amber-600 p-2 rounded-lg shadow-md border border-white/50 transition-all" title="Editar">
                                 <i class="fa-solid fa-pen text-sm"></i>
                             </button>
@@ -1221,7 +1343,11 @@
                                 <i class="fa-solid fa-trash text-sm"></i>
                             </button>
                         </div>
-                    ` : '';
+                    ` : (this.isAdmin() ? `
+                        <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            ${fireButton}
+                        </div>
+                    ` : '');
                     
                     card.innerHTML = `
                         <div class="h-48 overflow-hidden relative group cursor-pointer" onclick="app.playGame('${game.id}')">
@@ -1262,7 +1388,8 @@
             showToast(message, color) {
                 const toast = document.createElement('div');
                 const bgColor = color === 'green' ? 'from-green-400 to-teal-400' : 
-                               color === 'sky' ? 'from-sky-400 to-cyan-400' : 'from-gray-400 to-gray-500';
+                               color === 'sky' ? 'from-sky-400 to-cyan-400' : 
+                               color === 'orange' ? 'from-orange-400 to-red-500' : 'from-gray-400 to-gray-500';
                 toast.className = `fixed bottom-5 right-5 bg-gradient-to-r ${bgColor} text-white px-6 py-3 rounded-xl shadow-xl z-[100] font-medium border border-white/30`;
                 toast.style.boxShadow = '0 10px 40px rgba(0,100,150,0.3)';
                 toast.innerHTML = message;
