@@ -364,6 +364,104 @@
         body:not(.mobile-mode) .desktop-play-btn {
             display: flex !important;
         }
+        /* --- ULTRA OPTIMIZATION FOR MOBILE --- */
+        
+        /* 1. Disable Background Effects */
+        body.mobile-mode .bubble,
+        body.mobile-mode .leaf-decoration,
+        body.mobile-mode .aurora,
+        body.mobile-mode .glass-card::before,
+        body.mobile-mode body::before {
+            display: none !important;
+        }
+
+        /* 2. Kill Animations & Transitions globally */
+        body.mobile-mode * {
+            animation: none !important;
+            transition: none !important;
+            text-shadow: none !important;
+        }
+
+        /* 3. Remove Expensive Blur/Transparency (The Lag Killers) */
+        body.mobile-mode .glass-card,
+        body.mobile-mode .glass-card-dark,
+        body.mobile-mode .navbar-aero,
+        body.mobile-mode .modal-aero,
+        body.mobile-mode #login-modal .modal-aero,
+        body.mobile-mode #register-modal .modal-aero,
+        body.mobile-mode #submit-modal .modal-aero,
+        body.mobile-mode #edit-modal .modal-aero,
+        body.mobile-mode #profile-modal .modal-aero {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: #ffffff !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+        }
+        
+        /* 4. Solid Background */
+        body.mobile-mode {
+            background: #f0f9ff !important;
+        }
+
+        /* 5. Simplified Fire Effect (Static) */
+        body.mobile-mode .on-fire {
+            border: 3px solid #ff4500 !important;
+            box-shadow: none !important;
+        }
+        
+        body.mobile-mode .on-fire::before {
+            /* Static emoji, no movement */
+            top: -10px !important;
+            filter: none !important;
+        }
+        
+        body.mobile-mode .on-fire::after {
+            /* Static badge, simple gradient */
+            background: #ff4500 !important;
+            box-shadow: none !important;
+        }
+
+        /* 6. Simplified Inputs */
+        body.mobile-mode .input-aero {
+            box-shadow: none !important;
+            border: 1px solid #cbd5e1 !important;
+            background: #f8fafc !important;
+        }
+
+        /* 7. Navbar Simplification */
+        body.mobile-mode .navbar-aero {
+            background: #ffffff !important;
+            border-bottom: 2px solid #38bdf8 !important;
+        }
+
+        /* 8. Footer Simplification */
+        body.mobile-mode footer {
+            background: #f1f5f9 !important;
+            border-top: 1px solid #e2e8f0 !important;
+        }
+
+        /* 9. Card Simplification */
+        body.mobile-mode .game-card {
+            background: white !important;
+            border-radius: 8px !important;
+            margin-bottom: 12px !important;
+        }
+        
+        body.mobile-mode .game-card img {
+            border-radius: 8px 8px 0 0 !important;
+        }
+
+        /* 10. Hide complex decorative circles in Hero */
+        body.mobile-mode #hero-section div[class*="absolute"] {
+            display: none !important;
+        }
+        
+        /* Keep only the top gradient bar in hero */
+        body.mobile-mode #hero-section .absolute.top-0 {
+            display: block !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-gray-700">
